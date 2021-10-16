@@ -28,16 +28,46 @@ apt install openjdk-11-jre-headless -y
 ## Clone this git repository and run certificate chain creation script
 
 ```
-
+git clone https://github.com/DmitryZayats/certchain.git
 ```
 
 Script CreateCertChain.sh for creating certificate chain has configurable variables on lines 9-16.   
-If you don't modify any of those variables - sever certificate will be generated for CN=tomcat1.lab.net  
-and alias of the private key and attached certificate chain will be set to tomcat1  
-Most likely you would need to change below 3 parameters:
+If you don't modify any of those variables - sever certificate will be generated for CN=frontend.lab.net  
+and alias of the private key and attached certificate chain will be set to tomcat1.  
+Generated server certificate will also have SANs set to:  
+- DNS:nsp1.lab.net  
+- DNS:nsp2.lab.net  
+- DNS:nsp3.lab.net  
+- DNS:nsp4.lab.net  
+
+This is controlled via file `server-openssl.cnf` section:  
+
+```
+[ req_ext ]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1   = nsp1.lab.net
+DNS.2   = nsp2.lab.net
+DNS.3   = nsp3.lab.net
+DNS.4   = nsp4.lab.net
+```
+
+Most likely you would need to change below 3 parameters in the script `CreateCertChain.sh` file:
 - ServerName. To reflect FQDN name of your server.  
 - keystorealias. To change alias that contains private key and certificate chain in the keystore.jks file.  
 - truststorealias. This is alias for Root CA in the truststore.jks file.  
+
+```
+      8 ### Set your variables here ###
+      9 CAName="Root CA"
+     10 CAsubject="/C=US/ST=IL/L=Chicago/O=Nokia/OU=NSW/CN=$CAName"
+     11 IntermediateName="Intermediate"
+     12 IntermediateSubject="/C=US/ST=IL/L=Chicago/O=Nokia/OU=NSW/CN=$IntermediateName"
+     13 ServerName="frontend.lab.net"
+     14 ServerSubject="/C=US/ST=IL/L=Chicago/O=Nokia/OU=NSW/CN=$ServerName"
+     15 keystorealias="tomcat1"
+     16 truststorealias="rootca"
+```
 
 When executing script you will need to answer "yes" several times to confirmation dialogues and enter keystore and truststore passwords for your new keystore and truststore.  
 
