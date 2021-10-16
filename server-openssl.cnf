@@ -1,0 +1,17 @@
+[ req ]
+default_bits       = 2048
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+[ req_distinguished_name ]
+countryName                 = US
+stateOrProvinceName         = Illinois
+localityName               = Chicago
+organizationName           = HornsAndHoves
+commonName                 = Tomcat Server
+[ req_ext ]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1   = nsp1.lab.net
+DNS.2   = nsp2.lab.net
+DNS.3   = nsp3.lab.net
+DNS.4   = nsp4.lab.net
